@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Amvol TJ — Квартираҳо дар Душанбе</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="window.__sb_load_error=true"></script>
+<style>
+#sb-error{display:none;position:fixed;inset:0;z-index:10000;background:var(--dark);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center}
+#sb-error h2{color:var(--yellow);margin-bottom:16px;font-size:22px}
+#sb-error p{color:rgba(255,255,255,.7);font-size:14px;line-height:1.6;max-width:320px}
+</style>
+</head>
+<body>
+<!-- Supabase Error Screen -->
+<div id="sb-error">
+  <div style="font-size:64px;margin-bottom:20px">⚠️</div>
+  <h2>Хатои пайваст</h2>
+  <p id="sb-error-msg"> Supabase бор нашуд. Хоҳиш мекунам саҳинаро нав кунед (Refresh).</p>
+</div>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --yellow:#FFD700;--yellow-dark:#E6C200;--yellow-light:#FFF8DC;
+  --dark:#1B1B2F;--dark-2:#27274A;
+  --surface:#FFFFFF;--bg:#F4F5F7;
+  --text:#1B1B2F;--text2:#6B7280;--text3:#9CA3AF;
+  --green:#22C55E;--red:#EF4444;--blue:#3B82F6;
+  --shadow:0 2px 12px rgba(0,0,0,.08);
+  --shadow-lg:0 8px 30px rgba(0,0,0,.12);
+  --radius:16px;--radius-sm:10px;--radius-xs:8px;
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+body{padding-bottom:calc(70px + var(--safe-bottom))}
+img{max-width:100%;display:block}
+button{cursor:pointer;border:none;background:none;font-family:inherit;font-size:inherit}
+input,textarea,select{font-family:inherit;font-size:inherit}
+
+/* ── Splash ── */
+#splash{position:fixed;inset:0;z-index:9999;background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .5s,visibility .5s}
+#splash.hide{opacity:0;visibility:hidden;pointer-events:none}
+#splash .logo{font-size:36px;font-weight:800;color:var(--yellow);letter-spacing:-1px}
+#splash .sub{color:#fff;opacity:.6;margin-top:8px;font-size:14px}
+#splash .loader{width:40px;height:40px;border:3px solid rgba(255,255,255,.15);border-top-color:var(--yellow);border-radius:50%;animation:spin .8s linear infinite;margin-top:32px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Header ── */
+.header{background:var(--dark);color:#fff;padding:16px 20px;padding-top:calc(16px + env(safe-area-inset-top,0px));position:sticky;top:0;z-index:100}
+.header-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.header .brand{font-size:22px;font-weight:800;color:var(--yellow);letter-spacing:-0.5px}
+.header .brand span{color:#fff;font-weight:500;opacity:.7;font-size:14px;margin-left:6px}
+.header .avatar{width:36px;height:36px;border-radius:50%;background:var(--yellow);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--dark);font-size:14px}
+
+/* ── Search ── */
+.search-wrap{position:relative}
+.search-wrap input{width:100%;height:44px;border-radius:12px;border:none;padding:0 16px 0 44px;font-size:14px;background:rgba(255,255,255,.12);color:#fff;outline:none;transition:background .2s}
+.search-wrap input::placeholder{color:rgba(255,255,255,.45)}
+.search-wrap input:focus{background:rgba(255,255,255,.18)}
+.search-wrap svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.45)}
+
+/* ── Filters ── */
+.filters{display:flex;gap:8px;padding:12px 20px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filter-pill{flex-shrink:0;padding:8px 18px;border-radius:20px;font-size:13px;font-weight:600;background:var(--surface);color:var(--text2);border:1.5px solid transparent;transition:all .2s;white-space:nowrap}
+.filter-pill.active{background:var(--yellow);color:var(--dark);border-color:var(--yellow-dark);box-shadow:0 2px 8px rgba(255,215,0,.3)}
+
+/* ── Container ── */
+.container{padding:0 16px 24px}
+
+/* ── Section Title ── */
+.section-title{font-size:18px;font-weight:700;margin:16px 0 12px;color:var(--text)}
+.results-count{font-size:13px;color:var(--text2);font-weight:500;margin-bottom:4px}
+
+/* ── Cards Grid ── */
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:420px){.grid{grid-template-columns:1fr 1fr}}
+
+/* ── Card ── */
+.card{background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;position:relative}
+.card:active{transform:scale(.98)}
+.card-img{position:relative;height:200px;overflow:hidden;background:#e5e7eb}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+.card:active .card-img img{transform:scale(1.03)}
+.card-img .badge{position:absolute;top:12px;left:12px;background:var(--yellow);color:var(--dark);font-size:12px;font-weight:700;padding:4px 10px;border-radius:8px}
+.card-img .rooms-badge{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.6);color:#fff;font-size:11px;font-weight:600;padding:4px 8px;border-radius:8px;backdrop-filter:blur(4px)}
+.card-img .no-photo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f0f0f0,#e0e0e0);color:#ccc;font-size:48px}
+.card-body{padding:14px 16px}
+.card-title{font-size:15px;font-weight:700;margin-bottom:4px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-address{font-size:12px;color:var(--text2);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:1;line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta{display:flex;gap:12px;flex-wrap:wrap}
+.card-meta-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text2)}
+.card-meta-item svg{width:14px;height:14px;color:var(--text3)}
+.card-actions{display:flex;gap:8px;padding:0 16px 14px}
+.btn-sm{flex:1;height:38px;border-radius:var(--radius-xs);font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .2s}
+.btn-primary-sm{background:var(--yellow);color:var(--dark)}
+.btn-primary-sm:active{background:var(--yellow-dark)}
+.btn-danger-sm{background:rgba(239,68,68,.1);color:var(--red)}
+.btn-danger-sm:active{background:rgba(239,68,68,.2)}
+
+/* ── Empty State ── */
+.empty{text-align:center;padding:60px 20px}
+.empty-icon{font-size:64px;margin-bottom:16px}
+.empty h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.empty p{font-size:14px;color:var(--text2);line-height:1.5}
+
+/* ── FAB ── */
+.fab{position:fixed;bottom:calc(24px + var(--safe-bottom));right:20px;width:56px;height:56px;border-radius:50%;background:var(--yellow);color:var(--dark);font-size:28px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(255,215,0,.4);z-index:90;transition:transform .2s}
+.fab:active{transform:scale(.9)}
+
+/* ── Bottom Nav ── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:calc(70px + var(--safe-bottom));padding-bottom:var(--safe-bottom);background:var(--surface);border-top:1px solid #eee;display:flex;align-items:center;justify-content:space-around;z-index:100}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:600;color:var(--text3);transition:color .2s;padding:8px 16px}
+.nav-item.active{color:var(--yellow-dark)}
+.nav-item svg{width:22px;height:22px}
+
+/* ── Screens ── */
+.screen{display:none;min-height:calc(100vh - 120px)}
+.screen.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Detail Screen ── */
+.detail-header{position:relative;height:280px;overflow:hidden;background:#e5e7eb}
+.detail-header img{width:100%;height:100%;object-fit:cover}
+.detail-header .back-btn{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));left:12px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.detail-header .gallery-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px}
+.detail-header .gallery-dots span{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4)}
+.detail-header .gallery-dots span.active{background:#fff;width:18px;border-radius:3px}
+.detail-content{padding:20px;background:var(--surface);border-radius:20px 20px 0 0;margin-top:-20px;position:relative}
+.detail-price{font-size:28px;font-weight:800;color:var(--text)}
+.detail-price small{font-size:14px;font-weight:500;color:var(--text2)}
+.detail-title{font-size:20px;font-weight:700;margin:8px 0 4px}
+.detail-address{font-size:13px;color:var(--text2);margin-bottom:16px}
+.detail-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.detail-tag{padding:8px 14px;background:var(--bg);border-radius:10px;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.detail-tag svg{width:16px;height:16px;color:var(--yellow-dark)}
+.detail-desc-title{font-size:15px;font-weight:700;margin-bottom:8px}
+.detail-desc{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:20px}
+.detail-actions{display:flex;gap:10px;margin-bottom:24px}
+.btn-action{flex:1;height:50px;border-radius:14px;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s}
+.btn-download{background:var(--yellow);color:var(--dark);box-shadow:0 4px 12px rgba(255,215,0,.3)}
+.btn-download:active{background:var(--yellow-dark)}
+.btn-call{background:var(--dark);color:#fff}
+.btn-call:active{background:var(--dark-2)}
+.btn-delete-detail{background:rgba(239,68,68,.1);color:var(--red);width:50px;flex:0 0 50px}
+.detail-photos{margin-bottom:24px}
+.detail-photos h3{font-size:15px;font-weight:700;margin-bottom:12px}
+.photo-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.photo-grid img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:var(--radius-xs)}
+.detail-videos{margin-bottom:24px}
+.detail-videos h3{font-size:15px;font-weight:700;margin-bottom:12px}
+.video-item{border-radius:var(--radius-xs);overflow:hidden;background:#000;aspect-ratio:16/9;position:relative}
+.video-item video{width:100%;height:100%;object-fit:cover}
+
+/* ── Form Screen ── */
+.form-screen .header{position:sticky;top:0;z-index:100}
+.form-body{padding:20px}
+.form-group{margin-bottom:18px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px}
+.form-group label .req{color:var(--red)}
+.form-input{width:100%;height:48px;border:1.5px solid #e5e7eb;border-radius:var(--radius-xs);padding:0 14px;font-size:14px;outline:none;transition:border-color .2s;background:var(--surface)}
+.form-input:focus{border-color:var(--yellow)}
+textarea.form-input{height:100px;padding:12px 14px;resize:vertical}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239CA3AF' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+.upload-area{border:2px dashed #d1d5db;border-radius:var(--radius-xs);padding:32px 16px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;background:var(--surface)}
+.upload-area:active,.upload-area.dragover{border-color:var(--yellow);background:var(--yellow-light)}
+.upload-area svg{width:40px;height:40px;color:var(--text3);margin:0 auto 10px}
+.upload-area p{font-size:13px;color:var(--text2)}
+.upload-area .hint{font-size:11px;color:var(--text3);margin-top:4px}
+.upload-previews{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.upload-thumb{position:relative;width:72px;height:72px;border-radius:var(--radius-xs);overflow:hidden}
+.upload-thumb img,.upload-thumb video{width:100%;height:100%;object-fit:cover}
+.upload-thumb .remove{position:absolute;top:2px;right:2px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center}
+.btn-submit{width:100%;height:52px;border-radius:14px;background:var(--yellow);color:var(--dark);font-size:16px;font-weight:700;box-shadow:0 4px 12px rgba(255,215,0,.3);transition:all .2s}
+.btn-submit:active{background:var(--yellow-dark);transform:scale(.98)}
+.btn-submit:disabled{opacity:.5;pointer-events:none}
+
+/* ── Confirm Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;visibility:hidden;transition:all .3s}
+.modal-overlay.show{opacity:1;visibility:visible}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:24px;width:100%;max-width:480px;transform:translateY(100%);transition:transform .3s}
+.modal-overlay.show .modal{transform:translateY(0)}
+.modal h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.modal p{font-size:14px;color:var(--text2);margin-bottom:20px;line-height:1.5}
+.modal-btns{display:flex;gap:10px}
+.modal-btns button{flex:1;height:46px;border-radius:12px;font-size:14px;font-weight:600}
+.btn-cancel{background:var(--bg);color:var(--text)}
+.btn-confirm-del{background:var(--red);color:#fff}
+
+/* ── Toast ── */
+.toast{position:fixed;top:calc(16px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%) translateY(-100px);background:var(--dark);color:#fff;padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;z-index:300;transition:transform .3s;white-space:nowrap;max-width:90%}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{background:var(--green)}
+.toast.error{background:var(--red)}
+
+/* ── Loading ── */
+.loading{text-align:center;padding:40px}
+.spinner{width:32px;height:32px;border:3px solid #e5e7eb;border-top-color:var(--yellow);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto}
+
+/* ── Gallery Slider ── */
+.gallery-slider{display:flex;transition:transform .3s ease;height:100%}
+.gallery-slide{min-width:100%;height:100%}
+.gallery-slide img{width:100%;height:100%;object-fit:cover}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:0;height:0}
+</style>
+</head>
+<body>
+
+<!-- Splash -->
+<div id="splash">
+  <div class="logo">🏠 Amvol TJ</div>
+  <div class="sub">Квартираҳо дар Душанбе</div>
+  <div class="loader"></div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Confirm Modal -->
+<div id="confirmModal" class="modal-overlay">
+  <div class="modal">
+    <h3 id="modalTitle">Нест кардан?</h3>
+    <p id="modalText">Оё шумо мутмаин ҳастед, ки ин квартираро нест кардан мехоҳед? Ин амал бозгаштнашаванда аст.</p>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Бекор кардан</button>
+      <button class="btn-confirm-del" id="modalConfirmBtn">Нест кардан</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== АСОСИ ========== -->
+<div id="screenMain" class="screen active">
+  <header class="header">
+    <div class="header-top">
+      <div class="brand">Amvol TJ<span>квартираҳо</span></div>
+      <div class="avatar">AM</div>
+    </div>
+    <div class="search-wrap">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input type="text" id="searchInput" placeholder="Ҷустуҷӯ аз рӯи суроға ё ном...">
+    </div>
+  </header>
+
+  <div class="filters" id="filters">
+    <button class="filter-pill active" data-rooms="all">Ҳама</button>
+    <button class="filter-pill" data-rooms="1">1-хона</button>
+    <button class="filter-pill" data-rooms="2">2-хона</button>
+    <button class="filter-pill" data-rooms="3">3-хона</button>
+    <button class="filter-pill" data-rooms="4">4-хона</button>
+    <button class="filter-pill" data-rooms="5">5+ хона</button>
+  </div>
+
+  <div class="container">
+    <div class="results-count" id="resultsCount"></div>
+    <div class="grid" id="listingsGrid"></div>
+  </div>
+
+  <button class="fab" onclick="showScreen('screenAdd')" title="Иловаи квартира">+</button>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="showScreen('screenMain')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Асосӣ
+    </button>
+    <button class="nav-item" onclick="showScreen('screenAdd')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+      Илова
+    </button>
+    <button class="nav-item" onclick="showScreen('screenFavs')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      Дӯстдошта
+    </button>
+  </nav>
+</div>
+
+<!-- ========== МАЪЛУМОТИ БЕШТАР ========== -->
+<div id="screenDetail" class="screen">
+  <div class="detail-header" id="detailHeader">
+    <button class="back-btn" onclick="showScreen('screenMain')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
+    <div id="detailGallery"></div>
+  </div>
+  <div class="detail-content">
+    <div class="detail-price" id="detailPrice"></div>
+    <div class="detail-title" id="detailTitle"></div>
+    <div class="detail-address" id="detailAddress"></div>
+    <div class="detail-tags" id="detailTags"></div>
+    <div class="detail-desc-title">Тавсиф</div>
+    <div class="detail-desc" id="detailDesc"></div>
+    <div class="detail-photos" id="detailPhotosWrap" style="display:none">
+      <h3>Суратҳо</h3>
+      <div class="photo-grid" id="detailPhotos"></div>
+    </div>
+    <div class="detail-videos" id="detailVideosWrap" style="display:none">
+      <h3>Видеоҳо</h3>
+      <div id="detailVideos"></div>
+    </div>
+    <div class="detail-actions" id="detailActions"></div>
+  </div>
+</div>
+
+<!-- ========== ИЛОВА КАРДАН ========== -->
+<div id="screenAdd" class="screen">
+  <header class="header">
+    <div class="header-top">
+      <button style="color:#fff;font-size:20px;display:flex;align-items:center" onclick="showScreen('screenMain')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <div style="font-size:16px;font-weight:700;color:#fff">Эълони нав</div>
+      <div style="width:36px"></div>
+    </div>
+  </header>
+  <div class="form-body">
+    <form id="addForm" onsubmit="return handleAddListing(event)">
+      <div class="form-group">
+        <label>Ном <span class="req">*</span></label>
+        <input class="form-input" type="text" id="fName" placeholder="Масалан: 2-хонаи ором" required>
+      </div>
+      <div class="form-group">
+        <label>Суроға <span class="req">*</span></label>
+        <input class="form-input" type="text" id="fAddress" placeholder="хиёб. Рӯдакӣ, 45" required>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Нарх (сомонӣ) <span class="req">*</span></label>
+          <input class="form-input" type="number" id="fPrice" placeholder="250000" required>
+        </div>
+        <div class="form-group">
+          <label>Майдон (м²) <span class="req">*</span></label>
+          <input class="form-input" type="number" id="fArea" placeholder="65" required>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Хонаҳо <span class="req">*</span></label>
+          <select class="form-input" id="fRooms" required>
+            <option value="">Интихоб кунед</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5+</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Телефони соҳиб <span class="req">*</span></label>
+          <input class="form-input" type="tel" id="fPhone" placeholder="+992 900 000 000" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Тавсиф</label>
+        <textarea class="form-input" id="fDesc" placeholder="Дар бораи квартира, ноҳия ва қулайиятҳо нақл кунед..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Суратҳо</label>
+        <div class="upload-area" id="photoUpload" onclick="document.getElementById('fPhotos').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+          <p>Боргирии суратҳо</p>
+          <span class="hint">JPG, PNG то 5 МБ ҳар як</span>
+        </div>
+        <input type="file" id="fPhotos" multiple accept="image/*" style="display:none" onchange="handleFileSelect(this,'photo')">
+        <div class="upload-previews" id="photoPreviews"></div>
+      </div>
+      <div class="form-group">
+        <label>Видеоҳо</label>
+        <div class="upload-area" id="videoUpload" onclick="document.getElementById('fVideos').click()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m10 9 5 3-5 3z"/></svg>
+          <p>Боргирии видеоҳо</p>
+          <span class="hint">MP4 то 20 МБ</span>
+        </div>
+        <input type="file" id="fVideos" multiple accept="video/*" style="display:none" onchange="handleFileSelect(this,'video')">
+        <div class="upload-previews" id="videoPreviews"></div>
+      </div>
+      <button type="submit" class="btn-submit" id="submitBtn">Нашр кардан</button>
+    </form>
+  </div>
+</div>
+
+<!-- ========== ДӮСТДОШТА ========== -->
+<div id="screenFavs" class="screen">
+  <header class="header">
+    <div class="header-top">
+      <button style="color:#fff;font-size:20px;display:flex;align-items:center" onclick="showScreen('screenMain')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </button>
+      <div style="font-size:16px;font-weight:700;color:#fff">Дӯстдошта</div>
+      <div style="width:36px"></div>
+    </div>
+  </header>
+  <div class="container">
+    <div class="grid" id="favsGrid"></div>
+    <div class="empty" id="favsEmpty" style="display:none">
+      <div class="empty-icon">💔</div>
+      <h3>Ҳоло холӣ аст</h3>
+      <p>❤️-ро дар эълон пахш кунед, ки ба дӯстдоштаҳо илова кунед</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   Supabase Setup
+   ══════════════════════════════════════════ */
+const SUPABASE_URL = 'https://hmuqrjbcjjktviahftiu.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtdXFyamJjamprdHZpYWhmdGl1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU4Mzc1ODgsImV4cCI6MjA5MTQxMzU4OH0.L4QI5s8thMIzjFM2RL0njcUOYjpYJR_BUohn5qOinj4';
+
+let supabase = null;
+if (window.supabase && !window.__sb_load_error) {
+  try { supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY); }
+  catch(e) { console.error('Supabase init error:', e); }
+}
+
+/* ══════════════════════════════════════════
+   Image Compression (сжимаем фото)
+   Макс ширина 1200px, качество 70%
+   ══════════════════════════════════════════ */
+function compressImage(file, maxWidth = 1200, quality = 0.7) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxWidth) { h = Math.round(h * maxWidth / w); w = maxWidth; }
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+      canvas.toBlob((blob) => {
+        resolve(blob);
+      }, 'image/jpeg', quality);
+    };
+    img.onerror = () => resolve(file);
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+/* ══════════════════════════════════════════
+   State
+   ══════════════════════════════════════════ */
+let listings = [];
+let favorites = JSON.parse(localStorage.getItem('amvol_favs') || '[]');
+let currentFilter = 'all';
+let currentSearch = '';
+let currentDetail = null;
+let photoFiles = [];
+let videoFiles = [];
+let editingId = null;
+
+/* ── Telegram WebApp ── */
+const tg = window.Telegram && window.Telegram.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor('#1B1B2F');
+  tg.setBackgroundColor('#F4F5F7');
+}
+
+/* ══════════════════════════════════════════
+   Init
+   ══════════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', async () => {
+  setupFilters();
+  setupSearch();
+
+  // Проверяем загрузился ли Supabase
+  if (!supabase) {
+    document.getElementById('sb-error').style.display = 'flex';
+    document.getElementById('sb-error-msg').textContent = window.__sb_load_error
+      ? 'Supabase бор нашуд. Санҷиши интернет ё навкунии саҳифа.'
+      : 'Supabase ибтидо нашуд. Саҳифаро нав кунед.';
+    document.getElementById('splash').classList.add('hide');
+    return;
+  }
+
+  try {
+    await loadListings();
+  } catch (e) {
+    console.error('Init error:', e);
+    document.getElementById('sb-error').style.display = 'flex';
+    document.getElementById('sb-error-msg').textContent = 'Хатои боркунӣ аз сервер. Санҷиши интернет ва навкунии саҳифа.';
+  }
+
+  setTimeout(() => document.getElementById('splash').classList.add('hide'), 800);
+});
+
+/* ══════════════════════════════════════════
+   Load — читаем из Supabase
+   ══════════════════════════════════════════ */
+async function loadListings() {
+  const grid = document.getElementById('listingsGrid');
+  grid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+  if (!supabase) {
+    showToast('Supabase не загрузился!', 'error');
+    listings = [];
+    renderListings();
+    return;
+  }
+
+  // Таймаут 10 секунд
+  const timeoutPromise = new Promise((_, reject) =>
+    setTimeout(() => reject(new Error('Таймаут 10 секунд')), 10000)
+  );
+
+  try {
+    const { data, error } = await Promise.race([
+      supabase
+        .from('listings')
+        .select('*')
+        .order('created', { ascending: false }),
+      timeoutPromise
+    ]);
+
+    if (error) {
+      console.error('Supabase load error:', error);
+      showToast('Хато: ' + error.message, 'error');
+      listings = [];
+    } else {
+      listings = (data || []).map(l => ({
+        ...l,
+        photos: l.photos || [],
+        videos: l.videos || []
+      }));
+    }
+  } catch (e) {
+    console.error('Load error:', e);
+    if (e.message.includes('Таймаут')) {
+      showToast('Сервер демидар — нав кунед', 'error');
+    } else {
+      showToast('Хатои шабака', 'error');
+    }
+    listings = [];
+  }
+
+  renderListings();
+}
+
+/* ══════════════════════════════════════════
+   Upload file to Supabase Storage
+   ══════════════════════════════════════════ */
+async function uploadFile(file, folder, listingId) {
+  const ext = file.name.split('.').pop() || (file.type.startsWith('image') ? 'jpg' : 'mp4');
+  const fileName = `${folder}_${listingId}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const filePath = `${listingId}/${fileName}`;
+
+  const { data, error } = await supabase.storage
+    .from('apartments')
+    .upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: false
+    });
+
+  if (error) {
+    console.error('Upload error:', error);
+    return null;
+  }
+
+  // Получаем публичную ссылку
+  const { data: urlData } = supabase.storage
+    .from('apartments')
+    .getPublicUrl(filePath);
+
+  return urlData.publicUrl;
+}
+
+/* ══════════════════════════════════════════
+   Render
+   ══════════════════════════════════════════ */
+function renderListings() {
+  const grid = document.getElementById('listingsGrid');
+  const countEl = document.getElementById('resultsCount');
+
+  let filtered = listings.filter(l => {
+    const matchRooms = currentFilter === 'all' || l.rooms == currentFilter || (currentFilter === '5' && l.rooms >= 5);
+    const matchSearch = !currentSearch ||
+      l.name.toLowerCase().includes(currentSearch) ||
+      l.address.toLowerCase().includes(currentSearch);
+    return matchRooms && matchSearch;
+  });
+
+  countEl.textContent = `${filtered.length} ${pluralTg(filtered.length, 'эълон', 'эълон')}`;
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="empty" style="grid-column:1/-1">
+        <div class="empty-icon">🏠</div>
+        <h3>Ҳеҷ чӣ ёфт нашуд</h3>
+        <p>Филтрҳо ё дархости ҷустуҷӯро иваз кунед</p>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(l => `
+    <div class="card" onclick="openDetail('${l.id}')">
+      <div class="card-img">
+        ${l.photos && l.photos.length > 0
+          ? `<img src="${l.photos[0]}" alt="${esc(l.name)}" loading="lazy" onerror="this.parentElement.innerHTML='<div class=no-photo>🏠</div>'">`
+          : `<div class="no-photo">🏠</div>`}
+        <div class="badge">${formatPrice(l.price)} сом.</div>
+        <div class="rooms-badge">${l.rooms}-хона</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${esc(l.name)}</div>
+        <div class="card-address">📍 ${esc(l.address)}</div>
+        <div class="card-meta">
+          <div class="card-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            ${l.area} м²
+          </div>
+          <div class="card-meta-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M4 20V10l4-6h8l4 6v10M9 20v-6h6v6"/></svg>
+            ${l.rooms} хона
+          </div>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="btn-sm btn-primary-sm" onclick="event.stopPropagation();openDetail('${l.id}')">
+          👁 Бештар
+        </button>
+        <button class="btn-sm btn-danger-sm" onclick="event.stopPropagation();confirmDelete('${l.id}')">
+          🗑 Нест
+        </button>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ── Favorites ── */
+function renderFavorites() {
+  const grid = document.getElementById('favsGrid');
+  const empty = document.getElementById('favsEmpty');
+  const favListings = listings.filter(l => favorites.includes(l.id));
+
+  if (favListings.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = favListings.map(l => `
+    <div class="card" onclick="openDetail('${l.id}')">
+      <div class="card-img">
+        ${l.photos && l.photos.length > 0
+          ? `<img src="${l.photos[0]}" alt="${esc(l.name)}">`
+          : `<div class="no-photo">🏠</div>`}
+        <div class="badge">${formatPrice(l.price)} сом.</div>
+        <div class="rooms-badge">${l.rooms}-хона</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">${esc(l.name)}</div>
+        <div class="card-address">📍 ${esc(l.address)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════
+   Detail
+   ══════════════════════════════════════════ */
+function openDetail(id) {
+  const l = listings.find(x => x.id === id);
+  if (!l) return;
+  currentDetail = l;
+
+  const gallery = document.getElementById('detailGallery');
+  const hasPhotos = l.photos && l.photos.length > 0;
+  if (hasPhotos) {
+    gallery.innerHTML = `
+      <div class="gallery-slider" id="gallerySlider">
+        ${l.photos.map(p => `<div class="gallery-slide"><img src="${p}" alt=""></div>`).join('')}
+      </div>
+      <div class="gallery-dots">
+        ${l.photos.map((_, i) => `<span class="${i === 0 ? 'active' : ''}"></span>`).join('')}
+      </div>`;
+    setupGallerySwipe();
+  } else {
+    gallery.innerHTML = `<div class="no-photo" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1B1B2F,#27274A);font-size:64px">🏠</div>`;
+  }
+
+  document.getElementById('detailPrice').innerHTML = `${formatPrice(l.price)} <small>сомонӣ</small>`;
+  document.getElementById('detailTitle').textContent = l.name;
+  document.getElementById('detailAddress').textContent = `📍 ${l.address}`;
+  document.getElementById('detailTags').innerHTML = `
+    <div class="detail-tag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      ${l.area} м²
+    </div>
+    <div class="detail-tag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20h16M4 20V10l4-6h8l4 6v10M9 20v-6h6v6"/></svg>
+      ${l.rooms} хона
+    </div>
+    <div class="detail-tag">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <a href="tel:${l.phone}" style="color:var(--dark);text-decoration:none">${l.phone}</a>
+    </div>`;
+
+  document.getElementById('detailDesc').textContent = l.description || 'Тавсиф дода нашудааст';
+
+  const photosWrap = document.getElementById('detailPhotosWrap');
+  const photosEl = document.getElementById('detailPhotos');
+  if (hasPhotos && l.photos.length > 1) {
+    photosWrap.style.display = 'block';
+    photosEl.innerHTML = l.photos.map(p => `<img src="${p}" alt="" loading="lazy">`).join('');
+  } else { photosWrap.style.display = 'none'; }
+
+  const videosWrap = document.getElementById('detailVideosWrap');
+  const videosEl = document.getElementById('detailVideos');
+  if (l.videos && l.videos.length > 0) {
+    videosWrap.style.display = 'block';
+    videosEl.innerHTML = l.videos.map(v => `<div class="video-item"><video src="${v}" controls playsinline></video></div>`).join('');
+  } else { videosWrap.style.display = 'none'; }
+
+  document.getElementById('detailActions').innerHTML = `
+    <button class="btn-action btn-download" onclick="downloadListing('${l.id}')">
+      📥 Боргирӣ
+    </button>
+    <button class="btn-action btn-call" onclick="window.open('tel:${l.phone}')">
+      📞 Занг
+    </button>
+    <button class="btn-action btn-delete-detail" onclick="confirmDelete('${l.id}')">
+      🗑
+    </button>`;
+
+  showScreen('screenDetail');
+}
+
+/* ── Gallery Swipe ── */
+function setupGallerySwipe() {
+  const slider = document.getElementById('gallerySlider');
+  if (!slider) return;
+  const slides = slider.children.length;
+  if (slides <= 1) return;
+  let current = 0, startX = 0;
+  slider.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+  slider.addEventListener('touchend', e => {
+    const diff = startX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0 && current < slides - 1) current++;
+      else if (diff < 0 && current > 0) current--;
+      slider.style.transform = `translateX(-${current * 100}%)`;
+      document.querySelectorAll('.gallery-dots span').forEach((d, i) => d.classList.toggle('active', i === current));
+    }
+  });
+}
+
+/* ── Download ── */
+function downloadListing(id) {
+  const l = listings.find(x => x.id === id);
+  if (!l) return;
+  if (tg) {
+    tg.sendData(JSON.stringify({ action: 'download', listingId: id }));
+    showToast('Фиристодан ба чат...');
+  } else {
+    const text = `🏠 ${l.name}\n📍 ${l.address}\n💰 ${formatPrice(l.price)} сомонӣ\n📐 ${l.area} м² | ${l.rooms} хона\n📞 ${l.phone}\n\n${l.description}`;
+    navigator.clipboard.writeText(text).then(() => showToast('Тавсиф нусха бардошта шуд!', 'success'));
+  }
+}
+
+/* ══════════════════════════════════════════
+   Delete — из Supabase
+   ══════════════════════════════════════════ */
+let pendingDeleteId = null;
+function confirmDelete(id) {
+  pendingDeleteId = id;
+  document.getElementById('confirmModal').classList.add('show');
+}
+function closeModal() {
+  document.getElementById('confirmModal').classList.remove('show');
+  pendingDeleteId = null;
+}
+document.getElementById('modalConfirmBtn').addEventListener('click', async () => {
+  if (!pendingDeleteId) return;
+  const id = pendingDeleteId;
+  closeModal();
+
+  showToast('Нест шуда истодааст...');
+
+  try {
+    // Удаляем файлы из Storage
+    const l = listings.find(x => x.id === id);
+    if (l) {
+      // Удаляем все файлы папки квартиры
+      await supabase.storage.from('apartments').remove(
+        (l.photos || []).map(p => p.split('/apartments/')[1] || '').filter(Boolean)
+          .concat((l.videos || []).map(v => v.split('/apartments/')[1] || '').filter(Boolean))
+      );
+    }
+
+    // Удаляем из базы
+    const { error } = await supabase.from('listings').delete().eq('id', id);
+    if (error) {
+      showToast('Хатои нест кардан: ' + error.message, 'error');
+      return;
+    }
+
+    listings = listings.filter(l => l.id !== id);
+    favorites = favorites.filter(f => f !== id);
+    localStorage.setItem('amvol_favs', JSON.stringify(favorites));
+    renderListings();
+    showToast('Квартира нест карда шуд', 'success');
+
+    if (currentDetail && currentDetail.id === id) showScreen('screenMain');
+  } catch (e) {
+    console.error('Delete error:', e);
+    showToast('Хатои нест кардан', 'error');
+  }
+  pendingDeleteId = null;
+});
+
+/* ══════════════════════════════════════════
+   File Upload (превью)
+   ══════════════════════════════════════════ */
+function handleFileSelect(input, type) {
+  const files = Array.from(input.files);
+  files.forEach(file => {
+    if (type === 'photo' && file.size > 5 * 1024 * 1024) {
+      showToast('Сурат беш аз 5 МБ!'); return;
+    }
+    if (type === 'video' && file.size > 20 * 1024 * 1024) {
+      showToast('Видео беш аз 20 МБ!'); return;
+    }
+    const item = { file, preview: URL.createObjectURL(file) };
+    if (type === 'photo') photoFiles.push(item);
+    else videoFiles.push(item);
+  });
+  renderPreviews(type);
+  input.value = '';
+}
+
+function renderPreviews(type) {
+  const containerId = type === 'photo' ? 'photoPreviews' : 'videoPreviews';
+  const items = type === 'photo' ? photoFiles : videoFiles;
+  document.getElementById(containerId).innerHTML = items.map((item, i) => `
+    <div class="upload-thumb">
+      ${type === 'photo' ? `<img src="${item.preview}">` : `<video src="${item.preview}"></video>`}
+      <button class="remove" onclick="removeFile(${i},'${type}')">×</button>
+    </div>
+  `).join('');
+}
+
+function removeFile(index, type) {
+  if (type === 'photo') photoFiles.splice(index, 1);
+  else videoFiles.splice(index, 1);
+  renderPreviews(type);
+}
+
+/* ══════════════════════════════════════════
+   Add Listing — сохраняем в Supabase
+   ══════════════════════════════════════════ */
+async function handleAddListing(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Нашр шуда истодааст...';
+
+  if (!supabase) {
+    showToast('Supabase не подключён!', 'error');
+    btn.disabled = false;
+    btn.textContent = 'Нашр кардан';
+    return;
+  }
+
+  const listingId = editingId || String(Date.now());
+
+  // Загружаем фото (с сжатием)
+  let photoUrls = [];
+  for (let i = 0; i < photoFiles.length; i++) {
+    showToast(`Боргирии сурат ${i + 1}/${photoFiles.length}...`);
+    const compressed = await compressImage(photoFiles[i].file);
+    const url = await uploadFile(compressed, 'photo', listingId);
+    if (url) photoUrls.push(url);
+    else showToast(`Сурат ${i + 1} бор нашуд`, 'error');
+  }
+
+  // Загружаем видео (без сжатия)
+  let videoUrls = [];
+  for (let i = 0; i < videoFiles.length; i++) {
+    showToast(`Боргирии видео ${i + 1}/${videoFiles.length}...`);
+    const url = await uploadFile(videoFiles[i].file, 'video', listingId);
+    if (url) videoUrls.push(url);
+    else showToast(`Видео ${i + 1} бор нашуд`, 'error');
+  }
+
+  const listing = {
+    id: listingId,
+    name: document.getElementById('fName').value.trim(),
+    address: document.getElementById('fAddress').value.trim(),
+    price: Number(document.getElementById('fPrice').value),
+    area: Number(document.getElementById('fArea').value),
+    rooms: Number(document.getElementById('fRooms').value),
+    phone: document.getElementById('fPhone').value.trim(),
+    description: document.getElementById('fDesc').value.trim(),
+    photos: photoUrls,
+    videos: videoUrls,
+    created: Date.now()
+  };
+
+  try {
+    // Upsert в Supabase
+    const { error } = await supabase.from('listings').upsert(listing);
+    if (error) {
+      showToast('Хато: ' + error.message, 'error');
+      btn.disabled = false;
+      btn.textContent = 'Нашр кардан';
+      return;
+    }
+
+    if (editingId) {
+      const idx = listings.findIndex(l => l.id === editingId);
+      if (idx >= 0) listings[idx] = listing;
+      showToast('Навсозӣ шуд!', 'success');
+    } else {
+      listings.unshift(listing);
+      showToast('Нашр шуд!', 'success');
+    }
+  } catch (e) {
+    console.error('Save error:', e);
+    showToast('Хатои шабака', 'error');
+  }
+
+  document.getElementById('addForm').reset();
+  photoFiles = []; videoFiles = [];
+  renderPreviews('photo'); renderPreviews('video');
+  editingId = null;
+  btn.disabled = false;
+  btn.textContent = 'Нашр кардан';
+
+  renderListings();
+  showScreen('screenMain');
+}
+
+/* ══════════════════════════════════════════
+   Filters
+   ══════════════════════════════════════════ */
+function setupFilters() {
+  document.querySelectorAll('.filter-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentFilter = btn.dataset.rooms;
+      renderListings();
+    });
+  });
+}
+
+/* ── Search ── */
+function setupSearch() {
+  const input = document.getElementById('searchInput');
+  let timer;
+  input.addEventListener('input', () => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      currentSearch = input.value.toLowerCase().trim();
+      renderListings();
+    }, 300);
+  });
+}
+
+/* ══════════════════════════════════════════
+   Screens
+   ══════════════════════════════════════════ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navMap = { screenMain: 0, screenAdd: 1, screenFavs: 2 };
+  const navItems = document.querySelectorAll('.nav-item');
+  if (navItems[navMap[id]]) navItems[navMap[id]].classList.add('active');
+
+  if (tg) {
+    if (id === 'screenMain') { tg.BackButton.hide(); }
+    else {
+      tg.BackButton.show();
+      tg.BackButton.onClick(() => showScreen('screenMain'));
+    }
+  }
+
+  if (id === 'screenFavs') renderFavorites();
+  if (id === 'screenMain') renderListings();
+  window.scrollTo(0, 0);
+}
+
+/* ── Toast ── */
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ` ${type}` : '');
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ── Utils ── */
+function formatPrice(n) { return Number(n).toLocaleString('ru-RU'); }
+function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function pluralTg(n) { return n === 1 ? 'эълон' : 'эълон'; }
+
+/* ── Drag & Drop ── */
+['photoUpload', 'videoUpload'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('dragover', e => { e.preventDefault(); el.classList.add('dragover'); });
+  el.addEventListener('dragleave', () => el.classList.remove('dragover'));
+  el.addEventListener('drop', e => {
+    e.preventDefault(); el.classList.remove('dragover');
+    const type = id.includes('photo') ? 'photo' : 'video';
+    Array.from(e.dataTransfer.files).filter(f => type === 'photo' ? f.type.startsWith('image/') : f.type.startsWith('video/')).forEach(file => {
+      const item = { file, preview: URL.createObjectURL(file) };
+      if (type === 'photo') photoFiles.push(item); else videoFiles.push(item);
+    });
+    renderPreviews(type);
+  });
+});
+</script>
+</body>
+</html>
