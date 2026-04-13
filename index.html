@@ -440,7 +440,9 @@ function compressImage(file, maxWidth = 1200, quality = 0.7) {
    State
    ══════════════════════════════════════════ */
 let listings = [];
-let favorites = JSON.parse(localStorage.getItem('amvol_favs') || '[]');
+let favorites = [];
+try { favorites = JSON.parse(localStorage.getItem('amvol_favs') || '[]'); } 
+catch(e) { console.warn('Fav load error:', e); }
 let currentFilter = 'all';
 let currentSearch = '';
 let currentDetail = null;
@@ -499,9 +501,9 @@ async function loadListings() {
     return;
   }
 
-  // Таймаут 10 секунд
+  // Таймаут 3 сония
   const timeoutPromise = new Promise((_, reject) =>
-    setTimeout(() => reject(new Error('Таймаут 10 секунд')), 10000)
+    setTimeout(() => reject(new Error('Таймаут 3 секунд')), 3000)
   );
 
   try {
