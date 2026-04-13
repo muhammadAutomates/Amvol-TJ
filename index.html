@@ -11,15 +11,7 @@
 #sb-error{display:none;position:fixed;inset:0;z-index:10000;background:var(--dark);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center}
 #sb-error h2{color:var(--yellow);margin-bottom:16px;font-size:22px}
 #sb-error p{color:rgba(255,255,255,.7);font-size:14px;line-height:1.6;max-width:320px}
-</style>
-</head>
-<body>
-<!-- Supabase Error Screen -->
-<div id="sb-error">
-  <div style="font-size:64px;margin-bottom:20px">⚠️</div>
-  <h2>Хатои пайваст</h2>
-  <p id="sb-error-msg"> Supabase бор нашуд. Хоҳиш мекунам саҳинаро нав кунед (Refresh).</p>
-</div>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --yellow:#FFD700;--yellow-dark:#E6C200;--yellow-light:#FFF8DC;
   --dark:#1B1B2F;--dark-2:#27274A;
@@ -207,6 +199,13 @@ select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csv
 </style>
 </head>
 <body>
+
+<!-- Supabase Error Screen -->
+<div id="sb-error">
+  <div style="font-size:64px;margin-bottom:20px">⚠️</div>
+  <h2>Хатои пайваст</h2>
+  <p id="sb-error-msg"> Supabase бор нашуд. Хоҳиш мекунам саҳинаро нав кунед (Refresh).</p>
+</div>
 
 <!-- Splash -->
 <div id="splash">
