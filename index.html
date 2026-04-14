@@ -6,6 +6,7 @@
 <title>Amvol TJ — Квартираҳо дар Душанбе</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="window.__sb_load_error=true"></script>
 <style>
 #sb-error{display:none;position:fixed;inset:0;z-index:10000;background:var(--dark);color:#fff;display:none;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center}
@@ -528,7 +529,7 @@ async function loadListings() {
     }
   } catch (e) {
     console.error('Load error:', e);
-    if (e.message.includes('Таймаут')) {
+    if (e && e.message && e.message.includes('Таймаут')) {
       showToast('Сервер демидар — нав кунед', 'error');
     } else {
       showToast('Хатои шабака', 'error');
@@ -577,8 +578,8 @@ function renderListings() {
   let filtered = listings.filter(l => {
     const matchRooms = currentFilter === 'all' || l.rooms == currentFilter || (currentFilter === '5' && l.rooms >= 5);
     const matchSearch = !currentSearch ||
-      l.name.toLowerCase().includes(currentSearch) ||
-      l.address.toLowerCase().includes(currentSearch);
+      (l.name && l.name.toLowerCase().includes(currentSearch)) ||
+      (l.address && l.address.toLowerCase().includes(currentSearch));
     return matchRooms && matchSearch;
   });
 
